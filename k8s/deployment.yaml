@@ -1,40 +1,14 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: node-app
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: node-app
-  template:
-    metadata:
-      labels:
-        app: node-app
-    spec:
-      containers:
-      - name: node-app
-        # REPLACE 'abhishek' with your actual Docker Hub username
-        image: abhishek/node-k8s-app:latest 
-        imagePullPolicy: Always 
-        ports:
-        - containerPort: 3000
-        env:
-        - name: PORT
-          value: "3000"
-        - name: MONGO_URL
-          value: "mongodb://mongo:27017/my-database"
-        
-        # PROBES: Only keep these if you have an app.get('/health') route!
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+deploy:
+    needs: build-and-push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Verify Kubernetes Manifests
+      run: |
+        echo "Successfully built and pushed image to Docker Hub."
+        echo "Skipping automated deployment because the cluster is local (Docker Desktop)."
+        echo "To update your local cluster, run the following in PowerShell:"
+        echo "  kubectl apply -f k8s/deployment.yaml"
+        echo "  kubectl rollout restart deployment/node-app"
