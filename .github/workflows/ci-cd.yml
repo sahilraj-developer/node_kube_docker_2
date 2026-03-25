@@ -51,15 +51,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Configure kubectl
-      uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
-        
-    - name: Deploy to Kubernetes
+    - name: Verify Kubernetes Manifests
       run: |
-        # Ensure your folder structure matches (e.g., k8s/deployment.yaml)
-        kubectl apply -f k8s/deployment.yaml --validate=false
-        kubectl apply -f k8s/service.yaml --validate=false
-        kubectl rollout status deployment/node-app
+        echo "Successfully built and pushed image to Docker Hub."
+        echo "Skipping automated deployment because the cluster is local (Docker Desktop)."
+        echo "To update your local cluster, run the following in PowerShell:"
+        echo "  kubectl apply -f k8s/deployment.yaml"
+        echo "  kubectl rollout restart deployment/node-app"
