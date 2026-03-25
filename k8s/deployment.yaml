@@ -14,18 +14,18 @@ spec:
     spec:
       containers:
       - name: node-app
-        # CHANGE 'your-username' to your actual Docker Hub username
-        image: your-username/node-k8s-app:latest 
-        # Since you are building locally, this ensures it checks for the image
+        # REPLACE 'abhishek' with your actual Docker Hub username
+        image: abhishek/node-k8s-app:latest 
         imagePullPolicy: Always 
         ports:
         - containerPort: 3000
         env:
         - name: PORT
           value: "3000"
-        # Add the MongoDB connection string if your app needs it
         - name: MONGO_URL
           value: "mongodb://mongo:27017/my-database"
+        
+        # PROBES: Only keep these if you have an app.get('/health') route!
         livenessProbe:
           httpGet:
             path: /health

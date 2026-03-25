@@ -4,9 +4,10 @@ metadata:
   name: node-app-service
 spec:
   selector:
-    app: node-app
+    app: node-app # This MUST match the label in your deployment.yaml
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: LoadBalancer
+      port: 80         # Port used inside the cluster
+      targetPort: 3000 # Port your Node.js app is listening on
+      nodePort: 30001  # Port you will use in your browser (localhost:30001)
+  type: NodePort       # Changed to NodePort for better local control
